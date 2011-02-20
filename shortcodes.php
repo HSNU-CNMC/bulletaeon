@@ -128,14 +128,14 @@ function shortcode_table( $max, $cat, $curr_page )
 	// Grab from the database
 	if ( $cat == 'all' )
 	{
-		$sql = "SELECT msg_id, msg_time, msg_owner, msg_title FROM " . WP_BTAEON_TABLE . " ORDER BY msg_id DESC LIMIT $offset, $max";
+		$sql = "SELECT msg_id, msg_time, msg_owner, msg_title FROM " . WP_BTAEON_TABLE . " ORDER BY msg_time DESC LIMIT $offset, $max";
 		$rows = $wpdb->get_results($sql);
 	} elseif ( COMPAT_MODE == true && $cat == 'old' ) {
 		// INNER JOIN `users` to select Chinese usernames 
 		$result = mysql_query("SELECT boards.pno as msg_id, users.cont as msg_owner, boards.topi as msg_title, boards.time as msg_time FROM boards INNER JOIN users ON boards.user=users.user ORDER BY boards.pno DESC LIMIT $offset, $max");
 		$rows = mysql_fetch_object($result);
 	} else {
-		$sql = "SELECT msg_id, msg_time, msg_owner, msg_title FROM " . WP_BTAEON_TABLE . " WHERE msg_category='$cat' ORDER BY msg_id DESC LIMIT $offset, $max";
+		$sql = "SELECT msg_id, msg_time, msg_owner, msg_title FROM " . WP_BTAEON_TABLE . " WHERE msg_category='$cat' ORDER BY msg_time DESC LIMIT $offset, $max";
 		$rows = $wpdb->get_results($sql);
 	}
 

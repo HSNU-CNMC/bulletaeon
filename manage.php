@@ -157,7 +157,7 @@ function bt_manage_msgs()
 		$link = !empty( $_REQUEST['msg_link']) ? $wpdb->escape($_REQUEST['msg_link']) : '';
 		// $file is just temporary, it will be changed after file attachment feature is completed.
 		//$file = !empty( $_REQUEST['msg_file']) ? $wpdb->escape(trim($_REQUEST['msg_file'])) : '';
-		//$time = !empty( $_REQUEST['msg_time']) ? $wpdb->escape(trim($_REQUEST['msg_time'])) : '';
+		$time = !empty( $_REQUEST['msg_time']) ? $wpdb->escape(trim($_REQUEST['msg_time'])) : '';
 
 		if ( empty($msg_id) )
 		{
@@ -168,7 +168,7 @@ function bt_manage_msgs()
 			$orig_data = $wpdb->get_results($sql);
 			$orig_data = $orig_data[0];
 			$file = $orig_data->msg_file;
-			$time = $orig_data->msg_time;
+			//$time = $orig_data->msg_time;
 
 			// Perform some validation
 			// The title must be at least one character in length and no more than 30
@@ -254,6 +254,7 @@ function bt_manage_msgs()
 					msg_category='$category',
 					msg_content='$content',
 					msg_link='$link_serialized',
+					msg_time='$time',
 					msg_file='$file' WHERE msg_id='$msg_id'";
 				$wpdb->get_results($sql);
 
@@ -263,6 +264,7 @@ function bt_manage_msgs()
 					msg_category='$category' AND 
 					msg_content='$content' AND 
 					msg_link='$link_serialized' AND 
+					msg_time='$time' AND
 					msg_file='$file' LIMIT 1";
 				$result = $wpdb->get_results($sql);
 				if ( empty($result) || empty($result[0]->msg_id) )
@@ -621,9 +623,9 @@ function bt_msgs_display()
 	// Grab from the database
 	if ( $current_user->user_level >= 8 )
 	{
-		$sql = "SELECT " . WP_BTAEON_TABLE . ".* , " . WP_BTAEON_CATEGORIES_TABLE . ".category_name FROM " . WP_BTAEON_TABLE . " INNER JOIN " . WP_BTAEON_CATEGORIES_TABLE . " ON " . WP_BTAEON_TABLE . ".msg_category=" . WP_BTAEON_CATEGORIES_TABLE . ".category_id ORDER BY msg_id DESC LIMIT $offset, $msgs_per_page";
+		$sql = "SELECT " . WP_BTAEON_TABLE . ".* , " . WP_BTAEON_CATEGORIES_TABLE . ".category_name FROM " . WP_BTAEON_TABLE . " INNER JOIN " . WP_BTAEON_CATEGORIES_TABLE . " ON " . WP_BTAEON_TABLE . ".msg_category=" . WP_BTAEON_CATEGORIES_TABLE . ".category_id ORDER BY msg_time DESC LIMIT $offset, $msgs_per_page";
 	} else {
-		$sql = "SELECT " . WP_BTAEON_TABLE . ".* , " . WP_BTAEON_CATEGORIES_TABLE . ".category_name FROM " . WP_BTAEON_TABLE . " INNER JOIN " . WP_BTAEON_CATEGORIES_TABLE . " ON " . WP_BTAEON_TABLE . ".msg_category=" . WP_BTAEON_CATEGORIES_TABLE . ".category_id WHERE " . WP_BTAEON_TABLE . ".msg_owner='$current_user->user_login' ORDER BY msg_id DESC LIMIT $offset, $msgs_per_page";
+		$sql = "SELECT " . WP_BTAEON_TABLE . ".* , " . WP_BTAEON_CATEGORIES_TABLE . ".category_name FROM " . WP_BTAEON_TABLE . " INNER JOIN " . WP_BTAEON_CATEGORIES_TABLE . " ON " . WP_BTAEON_TABLE . ".msg_category=" . WP_BTAEON_CATEGORIES_TABLE . ".category_id WHERE " . WP_BTAEON_TABLE . ".msg_owner='$current_user->user_login' ORDER BY msg_time DESC LIMIT $offset, $msgs_per_page";
 	}
 	$msgs = $wpdb->get_results($sql);
 	if ( !empty($msgs) )
