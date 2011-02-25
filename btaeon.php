@@ -158,11 +158,4 @@ function bt_shortcode_css()
 	wp_enqueue_style('bt-shortcode');
 }
 
-function bt_admin_init()
-{
-	// Register Options
-	register_setting( 'btconf-group', 'msgs_per_page', 'intval' );
-	register_setting( 'btconf-group', 'compatibility', 'intval' );
-}
-
 ?>

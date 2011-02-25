@@ -403,6 +403,62 @@ function bt_msgs_edit_form($mode='add', $msg_id=false)
 		$data = $user_entries;
 	}
 ?>
+<!--<script type="text/javascript"  src="http://code.jquery.com/jquery-1.5.min.js"></script>-->
+<script type="text/javascript">
+	/* <![CDATA[ */
+	jQuery(document).ready(function($) {
+		$(".group_link > div:last").append('<a href="#" class="add_link">新增連結</a>');
+		$(".group_file:last").append('<a href="#" class="add_file">新增附件</a>');
+		var i = $("div.group_link").length;
+		
+		$(".add_link").click(function() {
+			var $newlink = $(".group_link:first").clone(true).insertAfter(".group_link:last");
+
+			i++;
+			$newlink.children("div:first").children("input").attr("name", "msg_link[" + i + "][0]");
+			$newlink.children("div:first").children("input").attr("value", "");
+			$newlink.children("div:last").children("input").attr("name", "msg_link[" + i + "][1]");
+			$newlink.children("div:last").children("input").attr("value", "");
+			$newlink.children("div:last").append('<a href="#" class="remove_link">移除連結</a>');
+
+			$(".remove_link").click(function() {
+				$(this).parents('div.group_link').remove();
+				i--;
+				return false;
+			});
+			return false;
+		});
+
+		$(".add_file").click(function() {
+			var $newfile = $(".group_file:first").clone(true).insertAfter(".group_file:last");
+
+			$newfile.children("label").html("附件");
+			$newfile.append('<a href="#" class="remove_file">移除附件</a>');
+
+			$(".remove_file").click(function() {
+				$(this).parent().remove();
+				return false;
+			});
+			return false;
+		});
+
+		$(".delete_file > input").change(function()
+		{
+			//$(this).css('text-decoration', 'line-through');
+			if(!$(this).hasClass('checked'))
+			{
+				$(this).parent().children('.delete_filename').css('text-decoration', 'line-through');
+				$(this).addClass('checked');
+			}
+			else
+			{
+				$(this).parent().children('.delete_filename').css('text-decoration', 'none');
+				$(this).removeClass('checked');
+			}
+		});
+	});
+	//]]>
+</script>
 <form name="msgform" enctype="multipart/form-data" id="msgform" class="wrap" method="post" action="<?php bloginfo('wpurl'); ?>/wp-admin/admin.php?page=bulletaeon&amp;reset=1">
 	<input type="hidden" name="MAX_FILE_SIZE" value="2097152" />
 	<input type="hidden" name="action" value="<?php echo $mode; ?>" />
@@ -463,10 +519,10 @@ function bt_msgs_edit_form($mode='add', $msg_id=false)
 			{
 				for ( $i = 1; $i <= 3; $i++ )
 				{
-					echo '<div><label for="msg_link">連結位址' . $i . '（可為空）</label>';	
+					echo '<div class="group_link"><div><label for="msg_link">連結位址（可為空）</label>';	
 					echo '<input type="text" name="msg_link[' . $i . '][0]" id="msg_link" cols="80" value="" /></div>';
 					echo '<div><label for="msg_link_descr">連結文字</label>';
-					echo '<input type="text" name="msg_link[' . $i . '][1]" id="msg_link_descr" cols="30" value="" /></div>';
+					echo '<input type="text" name="msg_link[' . $i . '][1]" id="msg_link_descr" cols="30" value="" /></div></div>';
 				}
 			} else {
 				$link_arr = unserialize($data->msg_link);
@@ -475,19 +531,19 @@ function bt_msgs_edit_form($mode='add', $msg_id=false)
 				{
 					$uri = $l[0];
 					$description = $l[1];
-					echo '<div><label for="msg_link">連結位址' . $key . '（可為空）</label>';
+					echo '<div class="group_link"><div><label for="msg_link">連結位址（可為空）</label>';
 					echo '<input type="text" name="msg_link[' . $key . '][0]" id="msg_link" cols="80" value="' . $uri . '" /></div>';
 					echo '<div><label for="msg_link_descr">連結文字</label>';
-					echo '<input type="text" name="msg_link[' . $key . '][1]" id="msg_link_descr" cols="30" value="' . $description . '" /></div>';
+					echo '<input type="text" name="msg_link[' . $key . '][1]" id="msg_link_descr" cols="30" value="' . $description . '" /></div></div>';
 				}
 			}
 		} else {
 			for ( $i = 1; $i <= 3; $i++ )
 			{
-				echo '<div><label for="msg_link">連結位址' . $i . '（可為空）</label>';	
+				echo '<div class="group_link"><div><label for="msg_link">連結位址（可為空）</label>';	
 				echo '<input type="text" name="msg_link[' . $i . '][0]" id="msg_link" cols="80" value="" /></div>';
 				echo '<div><label for="msg_link_descr">連結文字</label>';
-				echo '<input type="text" name="msg_link[' . $i . '][1]" id="msg_link_descr" cols="30" value="" /></div>';
+				echo '<input type="text" name="msg_link[' . $i . '][1]" id="msg_link_descr" cols="30" value="" /></div></div>';
 			}
 		}
 		if ( $mode == 'edit_save' )
@@ -506,8 +562,8 @@ function bt_msgs_edit_form($mode='add', $msg_id=false)
 						{
 							echo '<div><label>錯誤：檔名爲空</label></div>';
 						} else {
-								echo '<div><label for="delete">原有附件</label>' . $name . '&nbsp;&nbsp;&nbsp;<input type="checkbox" name="delete_atta[]" id="delete" value="yes" />刪除此檔案？</div>
-											<div><label for="file">上傳新附件</label><input type="file" id="file" name="atta[]"></div>';
+								echo '<div class="delete_file"><label for="delete">原有附件</label><span class="delete_filename">' . $name . '</span>&nbsp;&nbsp;&nbsp;<input type="checkbox" name="delete_atta[]" id="delete" value="yes" />刪除此檔案？</div>
+											<div class="group_file"><label for="file">上傳新附件</label><input type="file" id="file" name="atta[]"></div>';
 						}
 						$j++;
 					}
@@ -516,28 +572,28 @@ function bt_msgs_edit_form($mode='add', $msg_id=false)
 				// The maximum uploads allowed will be configured in the Config, use 2 temporarily
 				while ( $j < 2 )
 				{
-					echo '<div>
+					echo '<div class="group_file">
 									<label for="file">附件</label>
 									<input type="file" name="atta[]" id="file">
 							</div>';
 					$j++;
 				}
 			} else {
-					echo '<div>
+					echo '<div class="group_file">
 									<label for="file">附件</label>
 									<input type="file" name="atta[]" id="file">
 								</div>
-								<div>
+								<div class="group_file">
 									<label for="file">附件</label>
 									<input type="file" name="atta[]" id="file">
 								</div>';
 			}
 		} else {
-				echo '<div>
+				echo '<div class="group_file">
 								<label for="file">附件</label>
 								<input type="file" name="atta[]" id="file">
 							</div>
-							<div>
+							<div class="group_file">
 								<label for="file">附件</label>
 								<input type="file" name="atta[]" id="file">
 							</div>';
@@ -670,7 +726,7 @@ function bt_msgs_display()
 					$description = $i[1];
 					if ( empty($uri) && empty($description) )
 					{
-						break;
+						continue;
 					} else {
 						if ( empty($description) )
 							$description = $uri;
@@ -695,7 +751,7 @@ function bt_msgs_display()
 						$uri = WP_CONTENT_URL . '/' . $file_link['dirname'] . '/' . rawurlencode($file_link['basename']);
 						if ( empty($uri) && empty($name) )
 						{
-							break;
+							continue;
 						} else {
 							$out .= '<a href="' . $uri . '">' . $name . '</a>, ';
 						}

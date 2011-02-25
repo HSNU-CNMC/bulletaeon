@@ -283,7 +283,7 @@ function shortcode_single( $mid, $cat)
 					$description = $l[1];
 					if ( empty($uri) && empty($description) )
 					{
-						break;
+						continue;
 					} else {
 						if ( empty($description) )
 							$description = $uri;
@@ -311,7 +311,7 @@ function shortcode_single( $mid, $cat)
 						$uri = WP_CONTENT_URL . '/' . $file_link['dirname'] . '/' . rawurlencode($file_link['basename']);
 						if ( empty($uri) && empty($name) )
 						{
-							break;
+							continue;
 						} else {
 							$loop .= '<a href="' . $uri . '">' . $name . '</a>, ';
 						}
