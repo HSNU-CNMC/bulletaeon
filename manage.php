@@ -423,7 +423,7 @@ function bt_msgs_edit_form($mode='add', $msg_id=false)
 
 			$(".remove_link").click(function() {
 				$(this).parents('div.group_link').remove();
-				i--;
+				i = $("div.group_link").length;
 				return false;
 			});
 			return false;
