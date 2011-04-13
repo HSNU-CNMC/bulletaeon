@@ -29,7 +29,7 @@ function get_newmsg($max, $cat='all', $title='最新消息', $more='')
 		{
 			$out .= '<tr>
 				<td>' . convert_timestamp($row->msg_time) . '</td>
-				<td><a href="' . get_option("bt_showall_url") . '?mid=' . $row->msg_id . '">' . $row->msg_title . '</a></td>
+				<td><a href="' . get_option("bt_showall_url") . '?mid=' . $row->msg_id . '">' . stripslashes($row->msg_title) . '</a></td>
 				</tr>
 				';
 		}
@@ -116,7 +116,7 @@ function get_bt_search($query, $curr_page)
 			$out .= '<tr>
 				<td>' . convert_timestamp($row->msg_time) . '</td>
 				<td>' . $userinfo->display_name . '</td>
-				<td><a href="' . get_option("bt_showall_url") . '?mid=' . $row->msg_id . '">' . $row->msg_title . '</a></td>
+				<td><a href="' . get_bloginfo('wpurl') . get_option("bt_showall_url") . '?mid=' . $row->msg_id . '">' . stripslashes($row->msg_title) . '</a></td>
 				</tr>
 				';
 		}

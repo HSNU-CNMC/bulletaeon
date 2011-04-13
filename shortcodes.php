@@ -158,14 +158,10 @@ function shortcode_table( $max, $cat, $curr_page )
 		{
 			while ( $row = mysql_fetch_object($result) )
 			{
-				// Replace English usernames with Chinese ones
-				/*$search = array( 'register', 'experiment', 'guidance', 'computer', 'teaching', 'teacher', 'equipment', 'train', 'life', 'sanitation', 'physical', 'health', 'instructor', 'person', 'affair', 'library', 'cnmc', 'principal', 'book', 'jhsnu', 'art', 'music', 'account', 'art-life', 'language');
-				$replace = array('註冊組', '實驗研究組', '輔導老師', '資訊人員', '教學組', '實習輔導組', '設備組', '訓育組', '生活輔導組', '衛生組', '體育組', '健康中心', '教官', '人事員', '庶務員', '行政人員', '網管小組', '校長室', '文書組', '國中部', '美術班', '音樂班', '會計室', '藝術生活學科中心', '第二外語資源中心');
-				$row->msg_owner = str_replace($search, $replace, $row->msg_owner);*/
 				$out .= '<tr>
 					<td>' . $row->msg_time . '</td>
 					<td>' . $row->msg_owner . '</td>
-					<td><a href="?mid=' . $row->msg_id . '">' . htmlspecialchars($row->msg_title) . '</a></td>
+					<td><a href="?mid=' . $row->msg_id . '">' . htmlspecialchars(stripslashes($row->msg_title)) . '</a></td>
 					</tr>
 					';
 			}
@@ -179,7 +175,7 @@ function shortcode_table( $max, $cat, $curr_page )
 				$out .= '<tr>
 					<td>' . convert_timestamp($row->msg_time) . '</td>
 					<td>' . $owner . '</td>
-					<td><a href="?mid=' . $row->msg_id . '">' . htmlspecialchars($row->msg_title) . '</a></td>
+					<td><a href="?mid=' . $row->msg_id . '">' . htmlspecialchars(stripslashes($row->msg_title)) . '</a></td>
 					</tr>
 					';
 			}
@@ -225,7 +221,7 @@ function shortcode_single( $mid, $cat)
 			$out = "<table id=\"sh-mid\">
 				<tr>
 					<td class=\"sh-mid-left\">公告標題</td>
-					<td>" . htmlspecialchars($row->msg_title) . "</td>
+					<td>" . htmlspecialchars(stripslashes($row->msg_title)) . "</td>
 				</tr>
 				<tr>
 					<td class=\"sh-mid-left\">公告時間</td>
@@ -237,7 +233,7 @@ function shortcode_single( $mid, $cat)
 				</tr>
 				<tr>
 					<td class=\"sh-mid-left\">內容</td>
-					<td id=\"sh-mid-content\">" . nl2br(htmlspecialchars($row->msg_content)) . "</td>
+					<td id=\"sh-mid-content\">" . nl2br(htmlspecialchars(stripslashes($row->msg_content))) . "</td>
 				</tr>
 				<tr>
 					<td class=\"sh-mid-left\"></td>
@@ -256,7 +252,7 @@ function shortcode_single( $mid, $cat)
 				</colgroup>
 				<tr>
 					<td>公告標題</td>
-					<td>" . htmlspecialchars($row->msg_title) . "</td>
+					<td>" . htmlspecialchars(stripslashes($row->msg_title)) . "</td>
 				</tr>
 				<tr>
 					<td>公告時間</td>
@@ -268,7 +264,7 @@ function shortcode_single( $mid, $cat)
 				</tr>
 				<tr>
 					<td>內容</td>
-					<td id=\"sh-mid-content\">" . nl2br(htmlspecialchars($row->msg_content)) . "</td>
+					<td id=\"sh-mid-content\">" . nl2br(htmlspecialchars(stripslashes($row->msg_content))) . "</td>
 				</tr>";
 			if ( !empty($row->msg_link) )
 			{
