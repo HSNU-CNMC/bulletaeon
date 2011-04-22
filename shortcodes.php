@@ -72,15 +72,15 @@ function shortcode_table( $max, $cat, $curr_page )
 		if ( $numpages < 15 )
 		{
 			if ( $btpage == $curr_page ) $nav .= $btpage; // No need to create a link to current page
-			else $nav .= ' <a href="?btp=' . $btpage . '">' . $btpage . '</a> ';
+			else $nav .= ' <a href="?btp=' . $btpage . '" class="nav_page">' . $btpage . '</a> ';
 		} else {
-			if ( $btpage == $curr_page )$nav .= $btpage; // No need to create a link to current page
+			if ( $btpage == $curr_page )$nav .= '<span class="nav_page">' . $btpage . '</span>'; // No need to create a link to current page
 			elseif ( $btpage == 1 || $btpage == $numpages ) $nav .= ''; // No need to create first and last (they are created by the first and last links afterwards)
 			else {
 				// Print links that are close to the current page (< 10 steps away)
 				if ( $btpage < ($curr_page + 10) && $btpage > ($curr_page - 10) )
 				{
-					$nav .= ' <a href="?btp=' . $btpage . '">' . $btpage . '</a> ';
+					$nav .= ' <a href="?btp=' . $btpage . '" class="nav_page">' . $btpage . '</a> ';
 				}
 			}
 		}
@@ -92,7 +92,7 @@ function shortcode_table( $max, $cat, $curr_page )
 		$btpage = $curr_page - 1;
 		if ( $numpages >= 15 )
 		{
-			$first = ' <a href="?btp=1">&laquo;首頁</a> ';
+			$first = ' <a href="?btp=1" class="nav_page">&laquo;首頁</a> ';
 		} else {
 			$first = '';
 		}
@@ -111,7 +111,7 @@ function shortcode_table( $max, $cat, $curr_page )
 		$btpage = $curr_page + 1;
 		if ( $numpages >= 15 )
 		{
-			$last = ' <a href="?btp=' . $numpages . '">末頁&raquo;</a> ';
+			$last = ' <a href="?btp=' . $numpages . '" class="nav_page">末頁&raquo;</a> ';
 		} else {
 			$last = '';
 		}
