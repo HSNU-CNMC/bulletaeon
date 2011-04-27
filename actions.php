@@ -11,10 +11,10 @@ function get_newmsg($max, $cat='all', $title='最新消息', $more='')
 	if ( !is_int($max) ) $max = 10;
 	if ( $cat == 'all' )
 	{
-		$sql = "SELECT msg_id, msg_time, msg_title FROM " . WP_BTAEON_TABLE . " ORDER BY msg_id DESC LIMIT $max";
+		$sql = "SELECT msg_id, msg_time, msg_title FROM " . WP_BTAEON_TABLE . " ORDER BY msg_time DESC LIMIT $max";
 		$rows = $wpdb->get_results($sql);
 	} elseif ( $cat > 0 ) {
-		$sql = "SELECT msg_id, msg_time, msg_title FROM " . WP_BTAEON_TABLE . " WHERE msg_category='$cat' ORDER BY msg_id DESC LIMIT $max";
+		$sql = "SELECT msg_id, msg_time, msg_title FROM " . WP_BTAEON_TABLE . " WHERE msg_category='$cat' ORDER BY msg_time DESC LIMIT $max";
 		$rows = $wpdb->get_results($sql);
 	}
 
@@ -105,7 +105,7 @@ function get_bt_search($query, $curr_page)
 	}
 	
 	// Grab the search results
-	$rows = $wpdb->get_results("SELECT msg_id, msg_time, msg_owner, msg_title FROM " . WP_BTAEON_TABLE . " WHERE msg_title LIKE '%$query%' ORDER BY msg_id DESC LIMIT $offset, $max");
+	$rows = $wpdb->get_results("SELECT msg_id, msg_time, msg_owner, msg_title FROM " . WP_BTAEON_TABLE . " WHERE msg_title LIKE '%$query%' ORDER BY msg_time DESC LIMIT $offset, $max");
 	if ( !empty($rows) )
 	{
 		$out = '<table>';
