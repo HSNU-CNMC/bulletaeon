@@ -168,7 +168,9 @@ function bt_manage_msgs()
 			$orig_data = $wpdb->get_results($sql);
 			$orig_data = $orig_data[0];
 			$file = $orig_data->msg_file;
-			//$time = $orig_data->msg_time;
+
+			if ( !$_POST['update_time'] )
+				$time = $orig_data->msg_time;
 
 			// Perform some validation
 			// The title must be at least one character in length and no more than 30
@@ -485,6 +487,15 @@ function bt_msgs_edit_form($mode='add', $msg_id=false)
 			}
 ?>
 		</div>
+<?php
+	if ( $mode == 'edit_save' )
+	{?>
+		<div>
+			<label for="msg_time">將公告時間更新為編輯時間</label>
+			<input type="checkbox" name="update_time" />
+		</div>
+<?php
+	}?>
 		<div>
 			<label for="msg_content">公告內容</label>
 			<textarea name="msg_content" id="msg_content" rows="8" cols="50"><?php if ( !empty($data) ) echo htmlspecialchars(stripslashes($data->msg_content)); ?></textarea>
