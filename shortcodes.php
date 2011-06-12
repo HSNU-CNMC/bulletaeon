@@ -71,10 +71,10 @@ function shortcode_table( $max, $cat, $curr_page )
 		// With few pages, print all the links
 		if ( $numpages < 15 )
 		{
-			if ( $btpage == $curr_page ) $nav .= $btpage; // No need to create a link to current page
+			if ( $btpage == $curr_page ) $nav .= '<span class="nav_page">' . $btpage . '</span>'; // No need to create a link to current page
 			else $nav .= ' <a href="?btp=' . $btpage . '" class="nav_page">' . $btpage . '</a> ';
 		} else {
-			if ( $btpage == $curr_page )$nav .= '<span class="nav_page">' . $btpage . '</span>'; // No need to create a link to current page
+			if ( $btpage == $curr_page ) $nav .= '<span class="nav_page">' . $btpage . '</span>'; // No need to create a link to current page
 			elseif ( $btpage == 1 || $btpage == $numpages ) $nav .= ''; // No need to create first and last (they are created by the first and last links afterwards)
 			else {
 				// Print links that are close to the current page (< 10 steps away)

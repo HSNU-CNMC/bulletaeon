@@ -134,7 +134,7 @@ function bt_cats_edit_form( $mode = 'add', $cat_id = false )
 			$data = $wpdb->get_results("SELECT * FROM " . WP_BTAEON_CATEGORIES_TABLE . " WHERE category_id='$cat_id' LIMIT 1");
 			if ( empty($data) )
 			{
-				echo '<div class="error"><p>找不到該公告</p></div>';
+				echo '<div class="error"><p>找不到該分類</p></div>';
 				return;
 			}
 			$data = $data[0];
@@ -197,7 +197,7 @@ function bt_cats_display()
 		}
 		echo '</table>';
 	} else {
-		echo '<p>資料庫中沒有公告</p>';
+		echo '<p>資料庫中沒有分類</p>';
 	}
 }
 ?>
