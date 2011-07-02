@@ -130,4 +130,28 @@ function get_bt_search($query, $curr_page)
 }
 add_action('get_bt_search', 'get_bt_search', 10, 2);
 
+function get_allmsg($max)
+{
+	global $wpdb;
+
+	$msgs = array();
+	if ( !is_int($max) ) $max = 10;
+	// Get categories
+	$sql = "SELECT * FROM " . WP_BTAEON_CATEGORIES_TABLE;
+	$cat_rows = $wpdb->get_results($sql);
+	foreach ( $cat_rows as $cat_row )
+	{
+		$msgs[$cat_row->category_id]['name'] = $cat_row->category_name;
+		$sql = "SELECT msg_id, msg_time, msg_title FROM " . WP_BTAEON_TABLE . " WHERE msg_category='$cat_row->category_id' ORDER BY msg_time DESC LIMIT $max";
+		$msg_rows = $wpdb->get_results($sql);
+		foreach ( $msg_rows as $msg_row )
+		{
+			$msg_row->msg_time = convert_timestamp($msg_row->msg_time);
+		}
+		$msg_array = (array) $msg_rows;
+		$msgs[$cat_row->category_id]['msgs'] = $msg_array;
+	}
+	echo json_encode($msgs, JSON_FORCE_OBJECT);
+}
+add_action('bt_get_allmsg', 'get_allmsg', 10, 1);
 ?>
