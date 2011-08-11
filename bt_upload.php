@@ -8,6 +8,8 @@ function atta_upload( $time, $file, $action = 'add' )
 	// Change $file (string) to $file_arr (array), so it'll be easier to handle
 	$atta = $_FILES['atta'];
 	$file_arr = (empty($file)) ? '' : unserialize($file);
+	var_dump($_FILES);
+	var_dump($file_arr);
 	foreach ( $atta['size'] as $key => $value )
 	{
 		// Handle editing attachments

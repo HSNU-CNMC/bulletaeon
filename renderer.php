@@ -187,6 +187,14 @@ Class Renderer Extends Bulletaeon {
 			}
 ?>
 		</div>
+<?php
+			if ( $mode == 'edit_save' )
+			{?>
+		<div>
+			<label for="msg_time">將公告時間更新為編輯時間</label>
+			<input type="checkbox" name="update_time" />
+		</div>
+<?php			}?>
 		<div>
 			<label for="msg_content">公告內容</label>
 			<textarea name="msg_content" id="msg_content" rows="8" cols="50">

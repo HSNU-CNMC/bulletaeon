@@ -12,6 +12,13 @@ Class Validator Extends Bulletaeon {
 				$value = !empty($value) ? $wpdb->escape(trim($value)) : '';
 		}
 
+		// Grab original data from the database (It's too dangerous grabbing just from <input type="hidden" />)
+		$sql = "SELECT msg_time, msg_file FROM " . WP_BTAEON_TABLE . " WHERE msg_id='" . $reqdata['msg_id'] . "'";
+		$orig_data = $wpdb->get_results($sql);
+		$orig_data = $orig_data[0];
+		$file = $orig_data->msg_file;
+		//$time = $orig_data->msg_time;
+
 		/*$title = !empty( $_REQUEST['msg_title']) ? $wpdb->escape(trim($_REQUEST['msg_title'])) : '';
 		$category = !empty( $_REQUEST['msg_category']) ? $wpdb->escape(trim($_REQUEST['msg_category'])) : '';
 		$content = !empty( $_REQUEST['msg_content']) ? $wpdb->escape(trim($_REQUEST['msg_content'])) : '';
@@ -29,9 +36,9 @@ Class Validator Extends Bulletaeon {
 		if ( !self::check_links($reqdata['msg_link']) ) return false;
 		
 		// Check the uploaded file, call bt_upload.php
-		$file = !empty( $reqdata['msg_file'] ) ? $wpdb->escape($reqdata['msg_file']) : '';
+		//$file = !empty( $reqdata['msg_file'] ) ? $wpdb->escape($reqdata['msg_file']) : '';
 		$time = $wpdb->escape($reqdata['msg_time']);
-		$atta_return = atta_upload( $time, $file );
+		$atta_return = atta_upload( $time, $file, $reqdata['action'] );
 		$atta_ok = $atta_return['atta_ok'];
 		$reqdata['msg_file'] = $atta_return['file'];
 	
