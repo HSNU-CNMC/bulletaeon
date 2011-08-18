@@ -214,10 +214,6 @@ function shortcode_single( $mid, $cat)
 	{
 		if ( $cat == 'old' )
 		{
-			// Replace English usernames with Chinese ones
-			/*$search = array( 'register', 'experiment', 'guidance', 'computer', 'teaching', 'teacher', 'equipment', 'train', 'life', 'sanitation', 'physical', 'health', 'instructor', 'person', 'affair', 'library', 'cnmc', 'principal', 'book', 'jhsnu', 'art', 'music', 'account', 'art-life', 'language');
-			$replace = array('註冊組', '實驗研究組', '輔導老師', '資訊人員', '教學組', '實習輔導組', '設備組', '訓育組', '生活輔導組', '衛生組', '體育組', '健康中心', '教官', '人事員', '庶務員', '行政人員', '網管小組', '校長室', '文書組', '國中部', '美術班', '音樂班', '會計室', '藝術生活學科中心', '第二外語資源中心');
-			$row->user = str_replace($search, $replace, $row->user);*/
 			$out = "<table id=\"sh-mid\">
 				<tr>
 					<td class=\"sh-mid-left\">公告標題</td>
@@ -309,11 +305,11 @@ function shortcode_single( $mid, $cat)
 						{
 							continue;
 						} else {
-							$loop .= '<a href="' . $uri . '">' . $name . '</a>, ';
+							$loop .= '<a href="' . $uri . '">' . $name . '</a> [<a href="https://docs.google.com/viewer?url=' . $uri . '">預覽</a>] , ';
 						}
 					}
 				}
-				$loop = rtrim($loop, ', ');
+				$loop = rtrim($loop, ' , ');
 				$out .= $loop . '</td>
 					</tr>';
 			}
