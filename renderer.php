@@ -239,7 +239,7 @@ Class Renderer Extends Bulletaeon {
 				{
 					for ( $i = 1; $i <= 3; $i++ )
 					{
-						echo '<div class="group_link"><div><label for="msg_link">連結位址（可為空）</label>';	
+						echo '<div class="group_link"><div><label for="msg_link">連結位址</label>';
 						echo '<input type="text" name="msg_link[' . $i . '][0]" id="msg_link" cols="80" value="" /></div>';
 						echo '<div><label for="msg_link_descr">連結文字</label>';
 						echo '<input type="text" name="msg_link[' . $i . '][1]" id="msg_link_descr" cols="30" value="" /></div></div>';
@@ -304,30 +304,30 @@ Class Renderer Extends Bulletaeon {
 				while ( $j < 2 )
 				{
 					echo '<div class="group_file">
-									<label for="file">附件</label>
-									<input type="file" name="atta[]" id="file">
-							</div>';
+						<label for="file">附件</label>
+						<input type="file" name="atta[]" id="file">
+					</div>';
 					$j++;
 				}
 			} else {
 					echo '<div class="group_file">
-									<label for="file">附件</label>
-									<input type="file" name="atta[]" id="file">
-								</div>
-								<div class="group_file">
-									<label for="file">附件</label>
-									<input type="file" name="atta[]" id="file">
-								</div>';
+						<label for="file">附件</label>
+						<input type="file" name="atta[]" id="file">
+					</div>
+					<div class="group_file">
+						<label for="file">附件</label>
+						<input type="file" name="atta[]" id="file">
+					</div>';
 			}
 		} else {
 				echo '<div class="group_file">
-								<label for="file">附件</label>
-								<input type="file" name="atta[]" id="file">
-							</div>
-							<div class="group_file">
-								<label for="file">附件</label>
-								<input type="file" name="atta[]" id="file">
-							</div>';
+					<label for="file">附件</label>
+					<input type="file" name="atta[]" id="file">
+				</div>
+				<div class="group_file">
+					<label for="file">附件</label>
+					<input type="file" name="atta[]" id="file">
+				</div>';
 		}
 
 ?>

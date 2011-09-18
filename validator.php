@@ -12,67 +12,32 @@ Class Validator Extends Bulletaeon {
 				$value = !empty($value) ? $wpdb->escape(trim($value)) : '';
 		}
 
-		// Grab original data from the database (It's too dangerous grabbing just from <input type="hidden" />)
-		$sql = "SELECT msg_time, msg_file FROM " . WP_BTAEON_TABLE . " WHERE msg_id='" . $reqdata['msg_id'] . "'";
-		$orig_data = $wpdb->get_results($sql);
-		$orig_data = $orig_data[0];
-		$file = $orig_data->msg_file;
-		//$time = $orig_data->msg_time;
-
-		/*$title = !empty( $_REQUEST['msg_title']) ? $wpdb->escape(trim($_REQUEST['msg_title'])) : '';
-		$category = !empty( $_REQUEST['msg_category']) ? $wpdb->escape(trim($_REQUEST['msg_category'])) : '';
-		$content = !empty( $_REQUEST['msg_content']) ? $wpdb->escape(trim($_REQUEST['msg_content'])) : '';
-		$link = !empty( $_REQUEST['msg_link']) ? $wpdb->escape($_REQUEST['msg_link']) : '';*/
-
-		if ( isset($reqdata['action']) && $reqdata['action'] == 'edit_save' && empty($reqdata['msg_id']) )
+		if ( isset($reqdata['action']) && $reqdata['action'] == 'edit_save' )
 		{
-			echo '<div class="error"><p><strong>錯誤：</strong>未指定公告 ID ！</p></div>';
-			Renderer::js_redirect(5000);
-			return false;
+			if ( empty($reqdata['msg_id']) )
+			{
+				echo '<div class="error"><p><strong>錯誤：</strong>未指定公告 ID ！</p></div>';
+				Renderer::js_redirect(5000);
+				return false;
+			} else {
+				// Grab original data from the database (It's too dangerous grabbing just from <input type="hidden" />)
+				$sql = "SELECT msg_time, msg_file FROM " . WP_BTAEON_TABLE . " WHERE msg_id='" . $reqdata['msg_id'] . "'";
+				$orig_data = $wpdb->get_results($sql);
+				$orig_data = $orig_data[0];
+				//$time = $orig_data->msg_time;
+				$atta_return = atta_upload( $orig_data->msg_time, $orig_data->msg_file, 'edit_save' );
+				$reqdata['msg_file'] = $atta_return['file'];
+			}
+		} elseif ( isset($reqdata['action']) && $reqdata['action'] == 'add' ) {
+			$atta_return = atta_upload( $reqdata['msg_time'], '', 'add' );
+			$reqdata['msg_file'] = $atta_return['file'];
 		}
-		
+
 		if ( !self::check_title($reqdata['msg_title']) ) return false;
 		if ( !self::check_content($reqdata['msg_content']) ) return false;
 		if ( !self::check_links($reqdata['msg_link']) ) return false;
 		
-		// Check the uploaded file, call bt_upload.php
-		//$file = !empty( $reqdata['msg_file'] ) ? $wpdb->escape($reqdata['msg_file']) : '';
-		$time = $wpdb->escape($reqdata['msg_time']);
-		$atta_return = atta_upload( $time, $file, $reqdata['action'] );
-		$atta_ok = $atta_return['atta_ok'];
-		$reqdata['msg_file'] = $atta_return['file'];
-	
 		return true;
-	}
-
-	function check_everything_edit()
-	{
-		global $wpdb, $reqdata;
-		foreach ( $reqdata as $key => $value )
-			$value = !empty($value) ? $wpdb->escape(trim($value)) : '';
-
-		/*$title = !empty( $_REQUEST['msg_title']) ? $wpdb->escape(trim($_REQUEST['msg_title'])) : '';
-		$category = !empty( $_REQUEST['msg_category']) ? $wpdb->escape(trim($_REQUEST['msg_category'])) : '';
-		$content = !empty( $_REQUEST['msg_content']) ? $wpdb->escape(trim($_REQUEST['msg_content'])) : '';
-		$link = !empty( $_REQUEST['msg_link']) ? $wpdb->escape($_REQUEST['msg_link']) : '';*/
-		
-
-		$this->check_title($reqdata['msg_title']);
-		$this->check_content($reqdata['msg_content']);
-		$link_serialized = $this->check_links($reqdata['msg_link']);
-		
-		// Check the uploaded file, call bt_upload.php
-		$file = $wpdb->escape($file);
-		$atta_return = atta_upload( $time, $file );
-		$atta_ok = $atta_return['atta_ok'];
-		$reqdata['file'] = $atta_return['file'];
-	
-		return true;
-	}
-
-	function check_everything_delete()
-	{
-
 	}
 
 	function check_title( $title = '' )

@@ -1,61 +1,46 @@
 <?php
 // Function to handle attachments
-function atta_upload( $time, $file, $action = 'add' )
+function atta_upload( $time, $orig_file, $action = 'add' )
 {
 	wp_get_current_user();
 	global $current_user, $wpdb;
 
 	// Change $file (string) to $file_arr (array), so it'll be easier to handle
-	$atta = $_FILES['atta'];
-	$file_arr = (empty($file)) ? '' : unserialize($file);
+	$atta_post = $_FILES['atta'];
+	$file_arr = (empty($orig_file)) ? array() : unserialize($orig_file);
 	var_dump($_FILES);
 	var_dump($file_arr);
-	foreach ( $atta['size'] as $key => $value )
+	if ( $action == 'edit_save' )
 	{
-		// Handle editing attachments
-		if ( $action == 'edit_save' ) 
+		foreach ( $file_arr as $key => $path )
 		{
-			// Did the user check the "Delete this file" checkbox?
-			if ( isset($_POST['delete_atta'][$key]) && $_POST['delete_atta'][$key] == 'yes' )
+			if ( empty($path) )
 			{
-				$file_arr[$key] = '';
-				$atta_ok = 1;
 				continue;
-			}
-			// Is this upload originally empty?
-			if ( empty($file_arr[$key]) )
-			{
-				// It's empty
-				// Did the user submitted a new file? yes: it will do the checks below
-				if ( $value == 0 )
-				{
-					$atta_ok = 1;
-					continue;
-				}
+			} elseif ( isset($_POST['delete_atta'][$key]) && $_POST['delete_atta'][$key] == 'yes' ) {
+				// The user want to remove this attachment, so don't add it to $new_file_arr
+				continue;
 			} else {
-				// It's not empty
-				// Did the user submitted a new file? yes: it will do the checks below
-				if ( $value == 0 )
-				{
-					$atta_ok = 1;
-					continue;
-				}
+				$new_file_arr[] = $path;
 			}
 		}
+	}
 
+	foreach ( $atta_post['size'] as $key => $value )
+	{
 		if ( $value > 0 )
 		{
 			// Validate the uploaded file
-			if ( !is_uploaded_file($atta['tmp_name'][$key]) )
+			if ( !is_uploaded_file($atta_post['tmp_name'][$key]) )
 			{
 				echo '<div class="error"><p><strong>錯誤：</strong>Bad monkey! no babana! ' . $key . '</div>';
 				$atta_ok = 0;
 				break;
 			}
 
-			if ( $atta['error'][$key] > 0 )
+			if ( $atta_post['error'][$key] > 0 )
 			{
-				switch ( $atta['error'][$key] )
+				switch ( $atta_post['error'][$key] )
 				{
 				case 1:
 					echo '<div class="error"><p><strong>錯誤：</strong>檔案太大了！（upload_max_filesize）</div>';
@@ -85,7 +70,7 @@ function atta_upload( $time, $file, $action = 'add' )
 			}
 
 			// Check file type
-			$filepart = pathinfo($atta['name'][$key]);
+			$filepart = pathinfo($atta_post['name'][$key]);
 			$ext = array('csv', 'doc', 'xls', 'odt', 'ods', 'txt', 'pdf', 'jpg', 'png', 'gif');
 			if ( in_array($filepart['extension'], $ext) )
 			{
@@ -174,7 +159,7 @@ function atta_upload( $time, $file, $action = 'add' )
 					}
 
 					$dest_file = $upload_dir . $filename;
-					$temp_file = $atta['tmp_name'][$key];
+					$temp_file = $atta_post['tmp_name'][$key];
 
 					// Check for folder permission
 					if ( !is_writable($upload_dir) )
@@ -191,7 +176,7 @@ function atta_upload( $time, $file, $action = 'add' )
 							break;
 						} else {
 							$atta_ok = 1;
-							$file_arr[$key] = "bt_uploads/$u/$y/$m/$filename";
+							$new_file_arr[] = "bt_uploads/$u/$y/$m/$filename";
 						}
 					}
 				} else {
@@ -205,7 +190,6 @@ function atta_upload( $time, $file, $action = 'add' )
 				break;
 			}
 		} elseif ( $value == 0 ) {
-			$file_arr[$key] = '';
 			$atta_ok = 1;
 		} else {
 			$atta_ok = 0;
@@ -213,25 +197,20 @@ function atta_upload( $time, $file, $action = 'add' )
 		}
 	}
 
+	if ( !isset($new_file_arr) ) $new_file_arr = '';
+
 	// Check if $file_arr only contains empty elements, if so, set it to empty to prevent overhead
-	if ( is_array($file_arr) && count(array_filter($file_arr)) != 0 )
-	{
-		$file_empty = 0;
-	} else {
-		$file_empty = 1;
-	}
-	
-	if ( $file_empty == 0 )
+	if ( is_array($new_file_arr) && count(array_filter($new_file_arr)) != 0 )
 	{
 		// Serialize $file_arr so we can save it to the database later
-		$file_serialized = serialize($file_arr);
-		$file_serialized = $wpdb->escape($file_serialized);
+		$new_file_serialized = $wpdb->escape(serialize($new_file_arr));
 	} else {
-		$file_serialized = '';
+		$new_file_serialized = '';
 	}
-
+	
+	var_dump($new_file_serialized);
 	//echo "<div class=\"error\"><p>$file</p></div>";
-	$reply = array('atta_ok' => $atta_ok, 'file' => $file_serialized);
+	$reply = array('atta_ok' => $atta_ok, 'file' => $new_file_serialized);
 
 	return $reply;
 }
