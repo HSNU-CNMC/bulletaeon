@@ -134,6 +134,7 @@ Class Bulletaeon {
 			$sql = "CREATE TABLE " . WP_BTAEON_CATEGORIES_TABLE . " (
 				category_id TINYINT NOT NULL AUTO_INCREMENT,
 				category_name VARCHAR(10) NOT NULL,
+				category_link TEXT,
 				PRIMARY KEY (category_id)
 			) " . $charset_collate;
 			$wpdb->get_results($sql);

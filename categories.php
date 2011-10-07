@@ -11,6 +11,7 @@ function bt_manage_categories()
 		if ( $action == 'add' )
 		{
 			$cat_name = !empty( $_REQUEST['cat_name']) ? $wpdb->escape(trim($_REQUEST['cat_name'])) : '';
+			$cat_link = !empty( $_REQUEST['cat_link']) ? $wpdb->escape(trim($_REQUEST['cat_link'])) : '';
 
 			// Validate
 			if ( mb_strlen($cat_name, 'UTF-8') == 0 || mb_strlen($cat_name, 'UTF-8') > 10 )
@@ -20,16 +21,29 @@ function bt_manage_categories()
 			} else {
 				$cat_name_ok = 1;
 			}
+			if ( $cat_link != '' && preg_match('/^https?\:\/\//', $cat_link) && !preg_match('/^https?\:\/\/$/', $cat_link) )
+			{
+				$cat_link_ok = 1;
+			}
+			elseif ( empty($i[0]) && empty($i[1]) )
+			{
+				$cat_link_ok = 1;
+			} else {
+				$cat_link_ok = 0;
+				echo '<div class="error"><p><strong>錯誤：</strong>連結需為 http:// 或 https:// 開頭，或為空白</p></div>';
+				return false;
+				break;
+			}
 
 			// Operate the database if everything's alright
-			if ( $cat_name_ok == 1 )
+			if ( $cat_name_ok == 1 && $cat_link_ok == 1)
 			{
 				$sql = "INSERT INTO " . WP_BTAEON_CATEGORIES_TABLE . " SET
-					category_name='$cat_name'";
+					category_name='$cat_name', category_link='$cat_link'";
 				$wpdb->get_results($sql);
 
 				$sql = "SELECT category_id FROM " . WP_BTAEON_CATEGORIES_TABLE . " WHERE
-					category_name='$cat_name' LIMIT 1";
+					category_name='$cat_name' AND category_link='$cat_link' LIMIT 1";
 				$result = $wpdb->get_results($sql);
 				if ( empty($result) )
 				{
@@ -40,9 +54,11 @@ function bt_manage_categories()
 			} else {
 				// Preserve user entry
 				$user_entries->category_name = $cat_name;
+				$user_entries->category_link = $cat_link;
 			}
 		} elseif ( $action == 'edit_save' ) {
 			$cat_name = !empty( $_REQUEST['cat_name']) ? $wpdb->escape(trim($_REQUEST['cat_name'])) : '';
+			$cat_link = !empty( $_REQUEST['cat_link']) ? $wpdb->escape(trim($_REQUEST['cat_link'])) : '';
 
 			// Validate
 			if ( mb_strlen($cat_name, 'UTF-8') == 0 || mb_strlen($cat_name, 'UTF-8') > 10 )
@@ -52,17 +68,30 @@ function bt_manage_categories()
 			} else {
 				$cat_name_ok = 1;
 			}
+			if ( $cat_link != '' && preg_match('/^https?\:\/\//', $cat_link) && !preg_match('/^https?\:\/\/$/', $cat_link) )
+			{
+				$cat_link_ok = 1;
+			}
+			elseif ( empty($i[0]) && empty($i[1]) )
+			{
+				$cat_link_ok = 1;
+			} else {
+				$cat_link_ok = 0;
+				echo '<div class="error"><p><strong>錯誤：</strong>連結需為 http:// 或 https:// 開頭，或為空白</p></div>';
+				return false;
+				break;
+			}
 
 			// Operate the database if everything's alright
-			if ( $cat_name_ok == 1 )
+			if ( $cat_name_ok == 1 && $cat_link_ok == 1)
 			{
 				$sql = "UPDATE " . WP_BTAEON_CATEGORIES_TABLE . " SET
-					category_name='$cat_name' WHERE category_id='$cat_id'";
+					category_name='$cat_name', category_link='$cat_link' WHERE category_id='$cat_id'";
 				$wpdb->get_results($sql);
 				echo '<div class="updated"><p>' . $sql . '</p></div>';
 
 				$sql = "SELECT category_id FROM " . WP_BTAEON_CATEGORIES_TABLE . " WHERE
-					category_name='$cat_name' LIMIT 1";
+					category_name='$cat_name' AND category_link='$cat_link' LIMIT 1";
 				echo '<div class="updated"><p>' . $cat_name . '</p></div>';
 				$result = $wpdb->get_results($sql);
 				if ( empty($result) )
@@ -74,6 +103,7 @@ function bt_manage_categories()
 			} else {
 				// Preserve user entry
 				$user_entries->category_name = $cat_name;
+				$user_entries->category_link = $cat_link;
 				$error_with_saving = 1;
 			}
 		} elseif ( $action == 'delete' ) {
@@ -155,6 +185,8 @@ function bt_cats_edit_form( $mode = 'add', $cat_id = false )
 		<div class="inside">
 			<p class="inside-text"><span>分類名稱</span>
 			<input type="text" name="cat_name" class="input" size="13" maxlength="10" value="<?php if ( !empty($data) ) echo $data->category_name; ?>" /></p>
+			<p class="inside-text"><span>分類連結</span>
+			<input type="text" name="cat_link" class="input" size="60" value="<?php if ( !empty($data) ) echo $data->category_link; ?>" /></p>
 		</div>
 	</div>
 	<input type="submit" name="save" class="button bold" value="儲存 &raquo;" />
@@ -179,6 +211,7 @@ function bt_cats_display()
 		<tr>
 			<th width="3%" class="manage-column" scope="col">ID</th>
 			<th class="manage-column" scope="col">分類名稱</th>
+			<th class="manage-column" scope="col">分類連結（「更多」）</th>
 			<th width="3%" class="manage-column" scope="col">編輯</th>
 			<th width="3%" class="manage-column" scope="col">刪除</th>
 		</tr>
@@ -190,6 +223,7 @@ function bt_cats_display()
 	<tr>
 		<th scope="row"><?php echo stripslashes($cat->category_id); ?></th>
 		<td><?php echo stripslashes($cat->category_name); ?></td>
+		<td><?php echo '<a href="', stripslashes($cat->category_link), '">', stripslashes($cat->category_link), '</a>'; ?></td>
 		<td><a href="<?php bloginfo('wpurl'); ?>/wp-admin/admin.php?page=btcat&amp;action=edit&amp;cat_id=<?php echo stripslashes($cat->category_id);?>" class='edit'>編輯</a></td>
 		<td><a href="<?php bloginfo('wpurl'); ?>/wp-admin/admin.php?page=btcat&amp;action=delete&amp;cat_id=<?php echo stripslashes($cat->category_id);?>" class="delete" onclick="return confirm(您確定要刪除此分類？)">刪除</a></td>
 	</tr>

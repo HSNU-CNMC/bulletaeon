@@ -142,6 +142,7 @@ function get_allmsg($max)
 	foreach ( $cat_rows as $cat_row )
 	{
 		$msgs[$cat_row->category_id]['name'] = $cat_row->category_name;
+		$msgs[$cat_row->category_id]['link'] = $cat_row->category_link;
 		$sql = "SELECT msg_id, msg_time, msg_title FROM " . WP_BTAEON_TABLE . " WHERE msg_category='$cat_row->category_id' ORDER BY msg_time DESC LIMIT $max";
 		$msg_rows = $wpdb->get_results($sql);
 		foreach ( $msg_rows as $msg_row )
@@ -151,6 +152,7 @@ function get_allmsg($max)
 		$msg_array = (array) $msg_rows;
 		$msgs[$cat_row->category_id]['msgs'] = $msg_array;
 	}
+	krsort($msgs);
 	echo json_encode($msgs, JSON_FORCE_OBJECT);
 }
 add_action('bt_get_allmsg', 'get_allmsg', 10, 1);
