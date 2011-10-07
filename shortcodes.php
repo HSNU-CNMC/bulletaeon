@@ -305,7 +305,12 @@ function shortcode_single( $mid, $cat)
 						{
 							continue;
 						} else {
-							$loop .= '<a href="' . $uri . '">' . $name . '</a> [<a href="https://docs.google.com/viewer?url=' . $uri . '">預覽</a>] , ';
+							if ( in_array($file_link['extension'], array('doc', 'xls', 'pdf')) )
+							{
+								$loop .= '<a href="' . $uri . '">' . $name . '</a> [<a href="https://docs.google.com/viewer?url=' . $uri . '">預覽</a>] , ';
+							} else {
+								$loop .= '<a href="' . $uri . '">' . $name . '</a> , ';
+							}
 						}
 					}
 				}
