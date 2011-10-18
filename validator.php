@@ -24,7 +24,8 @@ Class Validator Extends Bulletaeon {
 				$sql = "SELECT msg_time, msg_file FROM " . WP_BTAEON_TABLE . " WHERE msg_id='" . $reqdata['msg_id'] . "'";
 				$orig_data = $wpdb->get_results($sql);
 				$orig_data = $orig_data[0];
-				//$time = $orig_data->msg_time;
+				if ( !$reqdata['update_time'] )
+					$reqdata['msg_time'] = $orig_data->msg_time;
 				$atta_return = atta_upload( $orig_data->msg_time, $orig_data->msg_file, 'edit_save' );
 				$reqdata['msg_file'] = $atta_return['file'];
 			}
