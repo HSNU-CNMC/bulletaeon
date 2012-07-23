@@ -61,14 +61,14 @@ function get_bt_search_by_title($query, $curr_page)
 		if ( $numpages < 4 )
 		{
 			if ( $spage == $curr_page ) $nav .= $spage; // No need to create a link to current page
-			else $nav .= ' <a href="?sp=' . $spage . '&st=bt&sq=' . $query . '">' . $spage . '</a> ';
+			else $nav .= ' <a href="?page=' . $spage . '&type=bt&title=' . $query . '">' . $spage . '</a> ';
 		} else {
 			if ( $spage == $curr_page )$nav .= $spage; // No need to create a link to current page
 			elseif ( $spage == 1 || $spage == $numpages ) $nav .= ''; // No need to create first and last (they are created by the first and last links afterwards)
 			else {
 				// Print links that are close to the current page (< 3 steps away)
 				if ( $spage < ($curr_page + 3) && $spage > ($curr_page - 3) )
-					$nav .= ' <a href="?sp=' . $spage . '&st=bt&sq=' . $query . '">' . $spage . '</a> ';
+					$nav .= ' <a href="?page=' . $spage . '&type=bt&title=' . $query . '">' . $spage . '</a> ';
 			}
 		}
 	}
@@ -78,7 +78,7 @@ function get_bt_search_by_title($query, $curr_page)
 	{
 		$spage = $curr_page - 1;
 		if ( $numpages >= 4 )
-			$first = ' <a href="?sp=1&st=bt&sq=' . $query . '">&laquo;首頁</a> ';
+			$first = ' <a href="?page=1&type=bt&title=' . $query . '">&laquo;首頁</a> ';
 		else
 			$first = '';
 	} else {
@@ -93,7 +93,7 @@ function get_bt_search_by_title($query, $curr_page)
 	{
 		$spage = $curr_page + 1;
 		if ( $numpages >= 4 )
-			$last = ' <a href="?sp=' . $numpages . '&st=bt&sq=' . $query . '">末頁&raquo;</a> ';
+			$last = ' <a href="?page=' . $numpages . '&type=bt&title=' . $query . '">末頁&raquo;</a> ';
 		else
 			$last = '';
 	} else {
@@ -147,14 +147,14 @@ function get_bt_search_by_owner($query, $curr_page)
 		if ( $numpages < 4 )
 		{
 			if ( $spage == $curr_page ) $nav .= $spage; // No need to create a link to current page
-			else $nav .= ' <a href="?sp=' . $spage . '&st=bt&owner=' . $query . '">' . $spage . '</a> ';
+			else $nav .= ' <a href="?page=' . $spage . '&type=bt&owner=' . $query . '">' . $spage . '</a> ';
 		} else {
 			if ( $spage == $curr_page )$nav .= $spage; // No need to create a link to current page
 			elseif ( $spage == 1 || $spage == $numpages ) $nav .= ''; // No need to create first and last (they are created by the first and last links afterwards)
 			else {
 				// Print links that are close to the current page (< 3 steps away)
 				if ( $spage < ($curr_page + 3) && $spage > ($curr_page - 3) )
-					$nav .= ' <a href="?sp=' . $spage . '&st=bt&owner=' . $query . '">' . $spage . '</a> ';
+					$nav .= ' <a href="?page=' . $spage . '&type=bt&owner=' . $query . '">' . $spage . '</a> ';
 			}
 		}
 	}
@@ -164,7 +164,7 @@ function get_bt_search_by_owner($query, $curr_page)
 	{
 		$spage = $curr_page - 1;
 		if ( $numpages >= 4 )
-			$first = ' <a href="?sp=1&st=bt&owner=' . $query . '">&laquo;首頁</a> ';
+			$first = ' <a href="?page=1&type=bt&owner=' . $query . '">&laquo;首頁</a> ';
 		else
 			$first = '';
 	} else {
@@ -179,7 +179,7 @@ function get_bt_search_by_owner($query, $curr_page)
 	{
 		$spage = $curr_page + 1;
 		if ( $numpages >= 4 )
-			$last = ' <a href="?sp=' . $numpages . '&st=bt&owner=' . $query . '">末頁&raquo;</a> ';
+			$last = ' <a href="?page=' . $numpages . '&type=bt&owner=' . $query . '">末頁&raquo;</a> ';
 		else
 			$last = '';
 	} else {
