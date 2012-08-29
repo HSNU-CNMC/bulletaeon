@@ -180,7 +180,7 @@ Class Renderer Extends Bulletaeon {
 			// This section of code has nothing to do with permission checking, it just shows the username
 			if ( $mode == 'edit_save' )
 			{
-				$userinfo = get_userdatabylogin($data->msg_owner);
+				$userinfo = get_user_by('login', $data->msg_owner);
 				echo $userinfo->display_name;
 			} else {
 				echo $current_user->display_name;
@@ -443,7 +443,7 @@ Class Renderer Extends Bulletaeon {
 			<tr>
 				<th scope="row"><?php echo stripslashes($msg->msg_id); ?></th>
 				<td><?php echo htmlspecialchars(stripslashes($msg->msg_title)); ?></td>
-				<td><?php $userinfo = get_userdatabylogin($msg->msg_owner);
+				<td><?php $userinfo = get_user_by('login', $msg->msg_owner);
 					echo $userinfo->display_name; ?></td>
 				<td><?php echo htmlspecialchars(stripslashes($msg->msg_content)); ?></td>
 				<td><?php echo stripslashes($msg->category_name); ?></td>

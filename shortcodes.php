@@ -170,7 +170,7 @@ function shortcode_table( $max, $cat, $curr_page )
 			foreach ( $rows as $row )
 			{
 				// Display display_name rather than login name
-				$userinfo = get_userdatabylogin($row->msg_owner);
+				$userinfo = get_user_by('login', $row->msg_owner);
 				$owner = ( empty($userinfo) ) ? '' : $userinfo->display_name;
 				$out .= '<tr>
 					<td>' . convert_timestamp($row->msg_time) . '</td>
@@ -239,7 +239,7 @@ function shortcode_single( $mid, $cat)
 
 		} else {
 			// Display display_name rather than login name
-			$userinfo = get_userdatabylogin($row->msg_owner);
+			$userinfo = get_user_by('login', $row->msg_owner);
 			$owner = ( empty($userinfo) ) ? '' : $userinfo->display_name;
 			$out = "<table id=\"sh-mid\">
 				<colgroup>

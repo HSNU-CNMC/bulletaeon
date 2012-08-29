@@ -112,7 +112,7 @@ function get_bt_search_by_title($query, $curr_page)
 		foreach ( $rows as $row )
 		{
 			// Display display_name rather than login name
-			$userinfo = get_userdatabylogin($row->msg_owner);
+			$userinfo = get_user_by('login', $row->msg_owner);
 			$out .= '<tr>
 				<td>' . convert_timestamp($row->msg_time) . '</td>
 				<td>' . $userinfo->display_name . '</td>
@@ -198,7 +198,7 @@ function get_bt_search_by_owner($query, $curr_page)
 		foreach ( $rows as $row )
 		{
 			// Display display_name rather than login name
-			$userinfo = get_userdatabylogin($row->msg_owner);
+			$userinfo = get_user_by('login', $row->msg_owner);
 			$out .= '<tr>
 				<td>' . convert_timestamp($row->msg_time) . '</td>
 				<td>' . $userinfo->display_name . '</td>
