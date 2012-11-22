@@ -57,20 +57,6 @@ function btaeon_menu()
 		$admpage[1] = add_submenu_page('bulletaeon', '管理公告分類', '分類', 'manage_options', 'btcat', 'bt_manage_categories');
 		$admpage[2] = add_submenu_page('bulletaeon', '公告系統設定', '設定', 'manage_options', 'btconf', 'bt_config');
 	}
-
-	// Link CSS in the header
-	foreach ( $admpage as $i )
-		add_action('admin_print_styles-' . $i , 'bt_manage_css');
-}
-
-function bt_manage_css()
-{
-	wp_enqueue_style('bt-manage');
-}
-
-function bt_shortcode_css()
-{
-	wp_enqueue_style('bt-shortcode');
 }
 
 Class Bulletaeon {
@@ -155,9 +141,18 @@ register_activation_hook( __FILE__, array('Bulletaeon', 'install') );
 // Create a master category for Calendar and its sub-pages
 add_action('admin_menu', 'btaeon_menu');
 
-// Register style
-wp_register_style('bt-manage', BT_PLUGIN_URL . '/style/manage.css');
-wp_register_style('bt-shortcode', BT_PLUGIN_URL . '/style/shortcodes.css');
+/* Load sytles and javascripts
+ * Ref: http://codex.wordpress.org/Function_Reference/wp_enqueue_script
+ */
+function load_bt_admin_scripts() {
+	wp_register_style('bt-manage', BT_PLUGIN_URL . '/style/manage.css');
+	wp_enqueue_style('bt-manage');
+}
+add_action( 'admin_enqueue_scripts', 'load_bt_admin_scripts' );
 
-add_action('wp_print_styles', 'bt_shortcode_css');
+function load_bt_shortcode_scripts() {
+	wp_register_style('bt-shortcode', BT_PLUGIN_URL . '/style/shortcodes.css');
+	wp_enqueue_style('bt-shortcode');
+}
+add_action( 'wp_enqueue_scripts', 'load_bt_shortcode_scripts' );
 ?>
