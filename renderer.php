@@ -432,6 +432,7 @@ Class Renderer Extends Bulletaeon {
 	                                <th class="manage-column" scope="col">連結</th>
 	                                <th class="manage-column" scope="col">附件</th>
 	                                <th width="7%" class="manage-column" scope="col">時間</th>
+	                                <th width="3%" class="manage-column" scope="col">置頂</th>
 	                                <th width="3%" class="manage-column" scope="col">編輯</th>
 	                                <th width="3%" class="manage-column" scope="col">刪除</th>
 	                            </tr>
@@ -495,6 +496,7 @@ Class Renderer Extends Bulletaeon {
 	?>
 				</td>
 				<td><?php echo stripslashes($msg->msg_time); ?></td>
+				<td><input type="radio" name="sticky" value="<?php echo stripslashes($msg->msg_id); ?>"/></td>
 				<?php
 				// Check if the current user is the owner of this message, or power user
 				if ( $current_user->user_login == $msg->msg_owner || $current_user->user_level >= 8 )
