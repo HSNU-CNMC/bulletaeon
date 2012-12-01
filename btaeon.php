@@ -23,6 +23,7 @@ include_once('actions.php');
 include_once('renderer.php');
 include_once('validator.php');
 include_once('dboperator.php');
+include_once('ajax.php');
 
 // Define the tables used in Bulletaeon
 // $table_prefix is deprecated in version 2.1, use $wpdb->prefix instead.
@@ -37,7 +38,7 @@ function btaeon_menu()
 {
 	global $wpdb;
 	$renderer = new Renderer();
-	
+
 	// Set the capability needed to manage messages
 	$allowed_group = 'edit_posts';
 
@@ -64,11 +65,11 @@ Class Bulletaeon {
 	public function install()
 	{
 		global $wpdb;
-	
+
 		// Create a folder for uploading
 		$dir = WP_CONTENT_DIR . '/bt_uploads/';
 		if ( !file_exists($dir) ) mkdir($dir);
-	
+
 		// Set database charset and collation
 		if ( ! empty($wpdb->charset) )
 			$charset_collate = "CHARACTER SET $wpdb->charset";
@@ -78,13 +79,13 @@ Class Bulletaeon {
 			$charset_collate .= " COLLATE $wpdb->collate";
 		else
 			$charset_collate .= " COLLATE utf8_general_ci";
-	
+
 		// Predefine some default values
 		$wp_btaeon_exists = false;
 		$wp_btaeon_categories_exists = false;
-	
+
 		$tables = $wpdb->get_results("SHOW TABLES");
-	
+
 		foreach ( $tables as $table )
 		{
 			foreach ( $table as $value )
@@ -97,7 +98,7 @@ Class Bulletaeon {
 					$wp_btaeon_categories_exists = true;
 			}
 		}
-	
+
 		// Perform operations according to the findings
 		if ( $wp_btaeon_exists == false )
 		{
@@ -114,7 +115,7 @@ Class Bulletaeon {
 			) " . $charset_collate;
 			$wpdb->get_results($sql);
 		}
-	
+
 		if ( $wp_btaeon_categories_exists == false )
 		{
 			$sql = "CREATE TABLE " . WP_BTAEON_CATEGORIES_TABLE . " (
@@ -124,7 +125,7 @@ Class Bulletaeon {
 				PRIMARY KEY (category_id)
 			) " . $charset_collate;
 			$wpdb->get_results($sql);
-	
+
 			// Create a default category
 			// XXX: Change default category_name?
 			$sql = "INSERT INTO " . WP_BTAEON_CATEGORIES_TABLE . "
@@ -155,4 +156,12 @@ function load_bt_shortcode_scripts() {
 	wp_enqueue_style('bt-shortcode');
 }
 add_action( 'wp_enqueue_scripts', 'load_bt_shortcode_scripts' );
+
+/* AJAX script for handling sticky messages
+ */
+function stickymsg_js() {
+	wp_register_script('stickymsg_js', BT_PLUGIN_URL . '/js/stickymsg.js');
+	wp_enqueue_script('stickymsg_js');
+}
+add_action('admin_enqueue_scripts', 'stickymsg_js');
 ?>
