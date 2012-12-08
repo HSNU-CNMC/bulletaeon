@@ -96,5 +96,13 @@ Class DBOperator Extends Bulletaeon {
 		}
 		return true;
 	}
+
+	function get_msg_by_id($msg_id)
+	{
+		global $wpdb;
+		$sql = "SELECT * FROM " . WP_BTAEON_TABLE . " WHERE
+			msg_id='" . intval($msg_id) . "';";
+		return $wpdb->get_results($sql);
+	}
 }
 ?>
