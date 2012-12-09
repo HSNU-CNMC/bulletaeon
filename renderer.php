@@ -496,7 +496,9 @@ Class Renderer Extends Bulletaeon {
 	?>
 				</td>
 				<td><?php echo stripslashes($msg->msg_time); ?></td>
-				<td><input type="radio" name="sticky" value="<?php echo stripslashes($msg->msg_id); ?>"/></td>
+				<td><input type="radio" name="sticky" value="<?php echo stripslashes($msg->msg_id); ?>"
+				<?php if ( $msg->sticky ) echo ' checked="checked"';?>
+				/></td>
 				<?php
 				// Check if the current user is the owner of this message, or power user
 				if ( $current_user->user_login == $msg->msg_owner || $current_user->user_level >= 8 )
