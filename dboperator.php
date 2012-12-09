@@ -134,7 +134,7 @@ Class DBOperator Extends Bulletaeon {
 			$sql = "(SELECT sticky, msg_id, msg_time, msg_owner, msg_title FROM " . WP_BTAEON_TABLE . " WHERE sticky=1 AND msg_category='$cat')
 			UNION
 			(SELECT sticky, msg_id, msg_time, msg_owner, msg_title FROM " . WP_BTAEON_TABLE . " WHERE msg_category='$cat')
-			ORDER BY sticky, msg_time DESC LIMIT $max";
+			ORDER BY sticky DESC, msg_time DESC LIMIT $max";
 			$rows = $wpdb->get_results($sql);
 		} elseif ( $cat == 'all' && $include_sticky == true ) {
 			$sql = "(SELECT sticky, msg_id, msg_owner, msg_title FROM " . WP_BTAEON_TABLE . " WHERE sticky=1)
