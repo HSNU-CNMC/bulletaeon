@@ -3,6 +3,18 @@
  * These functions are registered with "actions", they could be called by themes using do_action()
  */
 
+/*
+ * Wrapper to get new messages and sticky messages for displaying on front page
+ * @max: Maximium number of total messages to get
+ * @cat: Category to search in
+ * @include_sticky: Whether to include sticky messages
+ * return: Array of message objects
+ */
+function get_newmsg($max, $cat='all', $include_sticky=false)
+{
+	include_once('dboperator.php');
+	return DBOperator::get_newmsg($max, $cat, $include_sticky);
+}
 // Function to show "Newest messages"
 function get_newmsg0($max, $cat='all', $title='最新消息', $more='')
 {
