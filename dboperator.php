@@ -1,4 +1,7 @@
 <?php
+/*
+ * Class to manipulate databases
+ */
 Class DBOperator Extends Bulletaeon {
 	function add()
 	{
@@ -97,12 +100,50 @@ Class DBOperator Extends Bulletaeon {
 		return true;
 	}
 
+	/*
+	 * Get message by ID
+	 */
 	function get_msg_by_id($msg_id)
 	{
 		global $wpdb;
 		$sql = "SELECT * FROM " . WP_BTAEON_TABLE . " WHERE
 			msg_id='" . intval($msg_id) . "';";
 		return $wpdb->get_results($sql);
+	}
+
+	/*
+	 * Get new messages and sticky messages for displaying on front page
+	 * @max: Maximium number of total messages to get
+	 * @cat: Category to search in
+	 * @include_sticky: Whether to include sticky messages
+	 * return: Array of message objects, empty if no result
+	 */
+	function get_newmsg($max, $cat='all', $include_sticky=false )
+	{
+		global $wpdb;
+
+		if ( !is_int($max) ) $max = 10;
+		if ( $cat > 0 && $include_sticky == false )
+		{
+			$sql = "SELECT msg_id, msg_time, msg_title FROM " . WP_BTAEON_TABLE . " WHERE msg_category='$cat' ORDER BY msg_time DESC LIMIT $max";
+			$rows = $wpdb->get_results($sql);
+		} elseif ( $cat == 'all' && $include_sticky == false ) {
+			$sql = "SELECT msg_id, msg_time, msg_title FROM " . WP_BTAEON_TABLE . " ORDER BY msg_time DESC LIMIT $max";
+			$rows = $wpdb->get_results($sql);
+		} elseif ( $cat > 0 && $include_sticky == true ) {
+			$sql = "(SELECT sticky, msg_id, msg_time, msg_owner, msg_title FROM " . WP_BTAEON_TABLE . " WHERE sticky=1 AND msg_category='$cat')
+			UNION
+			(SELECT sticky, msg_id, msg_time, msg_owner, msg_title FROM " . WP_BTAEON_TABLE . " WHERE msg_category='$cat')
+			ORDER BY sticky, msg_time DESC LIMIT $max";
+			$rows = $wpdb->get_results($sql);
+		} elseif ( $cat == 'all' && $include_sticky == true ) {
+			$sql = "(SELECT sticky, msg_id, msg_owner, msg_title FROM " . WP_BTAEON_TABLE . " WHERE sticky=1)
+			UNION
+			(SELECT msg_id, msg_time, msg_title FROM " . WP_BTAEON_TABLE . ") ORDER BY sticky, msg_time DESC LIMIT $max";
+			$rows = $wpdb->get_results($sql);
+		}
+
+		return $rows;
 	}
 }
 ?>

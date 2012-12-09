@@ -3,8 +3,20 @@
  * These functions are registered with "actions", they could be called by themes using do_action()
  */
 
+/*
+ * Wrapper to get new messages and sticky messages for displaying on front page
+ * @max: Maximium number of total messages to get
+ * @cat: Category to search in
+ * @include_sticky: Whether to include sticky messages
+ * return: Array of message objects
+ */
+function get_newmsg($max, $cat='all', $include_sticky=false)
+{
+	include_once('dboperator.php');
+	return DBOperator::get_newmsg($max, $cat, $include_sticky);
+}
 // Function to show "Newest messages"
-function get_newmsg($max, $cat='all', $title='最新消息', $more='')
+function get_newmsg0($max, $cat='all', $title='最新消息', $more='')
 {
 	global $wpdb;
 
@@ -22,8 +34,8 @@ function get_newmsg($max, $cat='all', $title='最新消息', $more='')
 	{
 		$out = '<table id="newmsg">
 			<colgroup>
-				<col id="newmsg_time"/>
-				<col />
+			<col id="newmsg_time"/>
+			<col />
 			</colgroup>';
 		foreach ( $rows as $row )
 		{
@@ -38,11 +50,11 @@ function get_newmsg($max, $cat='all', $title='最新消息', $more='')
 	} else {
 		$out = '<p>找不到公告</p>';
 	}
-	
+
 	echo '<h3>' . $title . '</h3>' . $out;
 	if ( !empty($more) ) echo '<p id="newmsg_time_more"><a href="' . $more . '">更多</a></p>';
 }
-add_action('get_newmsg', 'get_newmsg', 10, 4);
+add_action('get_newmsg', 'get_newmsg', 10, 3);
 
 // Function to search and show the result by title
 function get_bt_search_by_title($query, $curr_page)
@@ -50,7 +62,7 @@ function get_bt_search_by_title($query, $curr_page)
 	global $wpdb;
 	$numrows = $wpdb->get_var("SELECT COUNT(msg_id) as rows FROM " . WP_BTAEON_TABLE . " WHERE msg_title LIKE '%$query%'");
 	$max = 15;
-        $numpages = ceil($numrows / $max);
+	$numpages = ceil($numrows / $max);
 	$offset = ($curr_page - 1) * $max;
 
 	// Print the links to access each page
@@ -103,7 +115,7 @@ function get_bt_search_by_title($query, $curr_page)
 		else
 			$last = '';
 	}
-	
+
 	// Grab the search results
 	$rows = $wpdb->get_results("SELECT msg_id, msg_time, msg_owner, msg_title FROM " . WP_BTAEON_TABLE . " WHERE msg_title LIKE '%$query%' ORDER BY msg_time DESC LIMIT $offset, $max");
 	if ( !empty($rows) )
@@ -124,7 +136,7 @@ function get_bt_search_by_title($query, $curr_page)
 	} else {
 		$out = '<p>找不到符合條件的公告</p>';
 	}	
-			
+
 	echo $first . $nav . $last . $out . $first . $nav . $last;
 
 }
@@ -136,7 +148,7 @@ function get_bt_search_by_owner($query, $curr_page)
 	global $wpdb;
 	$numrows = $wpdb->get_var("SELECT COUNT(msg_id) as rows FROM " . WP_BTAEON_TABLE . " WHERE msg_owner LIKE '$query'");
 	$max = 15;
-        $numpages = ceil($numrows / $max);
+	$numpages = ceil($numrows / $max);
 	$offset = ($curr_page - 1) * $max;
 
 	// Print the links to access each page
@@ -189,7 +201,7 @@ function get_bt_search_by_owner($query, $curr_page)
 		else
 			$last = '';
 	}
-	
+
 	// Grab the search results
 	$rows = $wpdb->get_results("SELECT msg_id, msg_time, msg_owner, msg_title FROM " . WP_BTAEON_TABLE . " WHERE msg_owner LIKE '$query' ORDER BY msg_time DESC LIMIT $offset, $max");
 	if ( !empty($rows) )
@@ -210,7 +222,7 @@ function get_bt_search_by_owner($query, $curr_page)
 	} else {
 		$out = '<p>找不到符合條件的公告</p>';
 	}	
-			
+
 	echo $first . $nav . $last . $out . $first . $nav . $last;
 
 }
