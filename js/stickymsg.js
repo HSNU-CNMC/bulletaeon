@@ -9,4 +9,15 @@ jQuery(document).ready(function($) {
 			alert(response);
 		});
 	});
+
+	// Function to clear all sticky post by this user
+	$('input[type="button"][name="clear_sticky_post"]').click(function () {
+		var data = {
+			action: 'clear_sticky_msg'
+		};
+		$.post(ajaxurl, data, function(response) {
+			alert(response);
+			location.reload();
+		});
+	});
 });

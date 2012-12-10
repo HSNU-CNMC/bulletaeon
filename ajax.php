@@ -20,4 +20,15 @@ function update_sticky_msg() {
 	}
 die;
 }
+
+add_action('wp_ajax_clear_sticky_msg', 'clear_sticky_msg');
+function clear_sticky_msg() {
+	$current_user = wp_get_current_user();
+	global $wpdb;
+
+	$sql = "UPDATE ".WP_BTAEON_TABLE." SET sticky=0 WHERE sticky=1 AND msg_owner='".$current_user->user_login."';";
+	$wpdb->get_results($sql);
+	echo "成功將您的所有公告取消置頂";
+die;
+}
 ?>

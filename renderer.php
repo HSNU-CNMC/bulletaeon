@@ -362,9 +362,11 @@ Class Renderer Extends Bulletaeon {
 		$msgs_per_page = (get_option('bt_msgs_per_page')) ? get_option('bt_msgs_per_page') : 15;
 		$numpages = ceil($numrows / $msgs_per_page);
 		$offset = ($curr_page - 1) * $msgs_per_page;
-	
-		// Print the link to access each page
+
 		$nav = '';
+		// Button to clear all sticky posts
+		$nav .= '<p><input type="button" name="clear_sticky_post" class="button" value="取消置頂我的公告" /></p>';
+		// Print the link to access each page
 		for ( $msgpage = 1; $msgpage <= $numpages; $msgpage++ )
 		{
 			// With few pages, print all the links
