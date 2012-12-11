@@ -31,7 +31,7 @@ define('WP_BTAEON_TABLE', $wpdb->prefix . 'btaeon_msgs');
 define('WP_BTAEON_CONFIG_TABLE', $wpdb->prefix . 'btaeon_config');
 define('WP_BTAEON_CATEGORIES_TABLE', $wpdb->prefix . 'btaeon_categories');
 define('WP_USERS_TABLE', $wpdb->prefix . 'users');
-define('BT_PLUGIN_URL', WP_PLUGIN_URL . '/' . basename(__DIR__) );
+define('BT_PLUGIN_URL', plugin_dir_url(__FILE__));
 
 // Function to add the bulletin menu
 function btaeon_menu()
