@@ -8,8 +8,6 @@ function atta_upload( $time, $orig_file, $action = 'add' )
 	// Change $file (string) to $file_arr (array), so it'll be easier to handle
 	$atta_post = $_FILES['atta'];
 	$file_arr = (empty($orig_file)) ? array() : unserialize($orig_file);
-	var_dump($_FILES);
-	var_dump($file_arr);
 	if ( $action == 'edit_save' )
 	{
 		foreach ( $file_arr as $key => $path )
@@ -208,7 +206,6 @@ function atta_upload( $time, $orig_file, $action = 'add' )
 		$new_file_serialized = '';
 	}
 	
-	var_dump($new_file_serialized);
 	//echo "<div class=\"error\"><p>$file</p></div>";
 	$reply = array('atta_ok' => $atta_ok, 'file' => $new_file_serialized);
 
