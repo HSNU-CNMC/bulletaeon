@@ -108,7 +108,13 @@ Class DBOperator Extends Bulletaeon {
 		global $wpdb;
 		$sql = "SELECT * FROM " . WP_BTAEON_TABLE . " WHERE
 			msg_id='" . intval($msg_id) . "';";
-		return $wpdb->get_results($sql);
+		$result = $wpdb->get_results($sql);
+		if ( $result ) {
+			return $result[0];
+		} else {
+			return false;
+		}
+
 	}
 
 	/*
