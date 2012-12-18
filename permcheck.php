@@ -1,6 +1,6 @@
 <?php
 /*
- * Check if the user owns the message, return "admin" for admins
+ * Check if the user owns the message, return NULL if there is problem querying
  * @user: Which user to check (Use user_login)
  * @msg_id: which msg to check
  */
