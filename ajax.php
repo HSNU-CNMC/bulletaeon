@@ -16,9 +16,9 @@ function update_sticky_msg() {
 			array(
 				'sticky' => 1,
 				'msg_owner' => $current_user->user_login,
-			)) == false ) {//When update fails
+			)) === false ) {//When update fails
 				echo "資料庫操作失敗:1";
-				die;
+die;
 			}
 		// Then sticky the desired one
 		if ( $wpdb->update( WP_BTAEON_TABLE,
@@ -30,23 +30,9 @@ function update_sticky_msg() {
 				'msg_owner' => $current_user->user_login,
 			)) == 0 ) {//When return false (error) or 0 (updated zero row)
 				echo "資料庫操作失敗:2";
-				die;
+die;
 			}
 		echo "成功將公告 $set_sticky_id 置頂:1";
-	} elseif ( current_user_can('install_plugins') ) {// If current user is admin
-		global $wpdb;
-		// Sticky the desired one
-		if ( $wpdb->update( WP_BTAEON_TABLE,
-			array(
-				'sticky' => 1,//DATA
-			),
-			array(
-				'msg_id' => $set_sticky_id,//WHERE
-			)) != 1 ) {
-			echo "資料庫操作失敗:3";
-die;
-		}
-		echo "成功將公告 $set_sticky_id 置頂:2";
 	} else {
 		echo '您不是該公告的擁有者';
 	}
@@ -55,21 +41,12 @@ die;
 
 add_action('wp_ajax_clear_sticky_msg', 'clear_sticky_msg');
 function clear_sticky_msg() {
-	if ( current_user_can('install_plugins') ) {// IF current user is admin
-		global $wpdb;
-		$sql = "UPDATE ".WP_BTAEON_TABLE." SET sticky=0 WHERE sticky=1;";
-		if ( ! $wpdb->get_results($sql) ) {
-			echo "資料庫操作失敗:3";
+	$current_user = wp_get_current_user();
+	global $wpdb;
+	$sql = "UPDATE ".WP_BTAEON_TABLE." SET sticky=0 WHERE sticky=1 AND msg_owner='".$current_user->user_login."';";
+	if ( ! $wpdb->get_results($sql) ) {
+		echo "資料庫操作失敗:3";
 die;
-		}
-	} else {
-		$current_user = wp_get_current_user();
-		global $wpdb;
-		$sql = "UPDATE ".WP_BTAEON_TABLE." SET sticky=0 WHERE sticky=1 AND msg_owner='".$current_user->user_login."';";
-		if ( ! $wpdb->get_results($sql) ) {
-			echo "資料庫操作失敗:3";
-die;
-		}
 	}
 	echo "成功將您的所有公告取消置頂";
 die;
