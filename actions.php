@@ -15,45 +15,6 @@ function get_newmsg($max, $cat='all', $include_sticky=false)
 	include_once('dboperator.php');
 	return DBOperator::get_newmsg($max, $cat, $include_sticky);
 }
-// Function to show "Newest messages"
-function get_newmsg0($max, $cat='all', $title='最新消息', $more='')
-{
-	global $wpdb;
-
-	if ( !is_int($max) ) $max = 10;
-	if ( $cat == 'all' )
-	{
-		$sql = "SELECT msg_id, msg_time, msg_title FROM " . WP_BTAEON_TABLE . " ORDER BY msg_time DESC LIMIT $max";
-		$rows = $wpdb->get_results($sql);
-	} elseif ( $cat > 0 ) {
-		$sql = "SELECT msg_id, msg_time, msg_title FROM " . WP_BTAEON_TABLE . " WHERE msg_category='$cat' ORDER BY msg_time DESC LIMIT $max";
-		$rows = $wpdb->get_results($sql);
-	}
-
-	if ( !empty($rows) )
-	{
-		$out = '<table id="newmsg">
-			<colgroup>
-			<col id="newmsg_time"/>
-			<col />
-			</colgroup>';
-		foreach ( $rows as $row )
-		{
-			$out .= '<tr>
-				<td>' . convert_timestamp($row->msg_time) . '</td>
-				<td><a href="' . get_option("bt_showall_url") . '?mid=' . $row->msg_id . '">' . stripslashes($row->msg_title) . '</a></td>
-				</tr>
-				';
-		}
-
-		$out .= '</table>';
-	} else {
-		$out = '<p>找不到公告</p>';
-	}
-
-	echo '<h3>' . $title . '</h3>' . $out;
-	if ( !empty($more) ) echo '<p id="newmsg_time_more"><a href="' . $more . '">更多</a></p>';
-}
 add_action('get_newmsg', 'get_newmsg', 10, 3);
 
 // Function to search and show the result by title
