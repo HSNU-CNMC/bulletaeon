@@ -111,6 +111,7 @@ Class Bulletaeon {
 				msg_content LONGTEXT NOT NULL,
 				msg_link TEXT DEFAULT '',
 				msg_file TEXT DEFAULT '',
+				sticky TINYINT(1) NULL DEFAULT 0,
 				PRIMARY KEY (msg_id)
 			) " . $charset_collate;
 			$wpdb->get_results($sql);

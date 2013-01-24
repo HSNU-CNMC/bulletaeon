@@ -43,8 +43,14 @@ add_action('wp_ajax_clear_sticky_msg', 'clear_sticky_msg');
 function clear_sticky_msg() {
 	$current_user = wp_get_current_user();
 	global $wpdb;
-	$sql = "UPDATE ".WP_BTAEON_TABLE." SET sticky=0 WHERE sticky=1 AND msg_owner='".$current_user->user_login."';";
-	if ( ! $wpdb->get_results($sql) ) {
+	if ( $wpdb->update( WP_BTAEON_TABLE,
+		array(
+			'sticky' => 0
+		),
+		array(
+			'sticky' => 1,
+			'msg_owner' => $current_user->user_login,
+		)) == 0 ) {//When return false (error) or 0 (updated zero row)
 		echo "資料庫操作失敗:3";
 die;
 	}
