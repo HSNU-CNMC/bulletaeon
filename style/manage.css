@@ -29,15 +29,15 @@
 }
 /* msgForm
  * ================================ */
-form > div > div {
+form#msgform > div > div {
 	margin: 1%  22%;
 	position: static;
 }
-label {
+#msgform label {
 	float: left;
 	width: 22%;
 }
-input[type='text'] {
+#msgform input[type='text'] {
 	width: 70%;
 }
 #msg_link_descr {
