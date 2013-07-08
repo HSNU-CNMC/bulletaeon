@@ -155,7 +155,8 @@ Class Renderer Extends Bulletaeon {
 	//]]>
 </script>
 <form name="msgform" enctype="multipart/form-data" id="msgform" class="wrap" method="post" action="<?php bloginfo('wpurl'); ?>/wp-admin/admin.php?page=bulletaeon&amp;sent=1">
-	<input type="hidden" name="MAX_FILE_SIZE" value="2097152" />
+	<input type="hidden" name="MAX_FILE_SIZE" value="<?php 
+	echo min(self::return_bytes(ini_get('upload_max_filesize')), self::return_bytes(ini_get('post_max_size')));?>" />
 	<input type="hidden" name="action" value="<?php echo $mode; ?>" />
 	<input type="hidden" name="msg_id" value="<?php echo stripslashes($msg_id); ?>" />
 	<input type="hidden" name="msg_owner" value="<?php 
@@ -557,6 +558,22 @@ Class Renderer Extends Bulletaeon {
 		}
 		//-->
 		</script>';
+	}
+
+	function return_bytes($val) {
+		$val = trim($val);
+		$last = strtolower($val[strlen($val)-1]);
+		switch($last) {
+			// The 'G' modifier is available since PHP 5.1.0
+		case 'g':
+			$val *= 1024;
+		case 'm':
+			$val *= 1024;
+		case 'k':
+			$val *= 1024;
+		}
+
+		return $val;
 	}
 }
 
